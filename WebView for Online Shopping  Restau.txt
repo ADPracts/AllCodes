@@ -1,0 +1,68 @@
+WebView for Online Shopping / Restaurant App
+🛠 Key Components:
+One activity: MainActivity.java
+
+One WebView in XML layout
+
+Add Internet permission in AndroidManifest.xml
+
+📄 Step 1: activity_main.xml
+xml
+Copy
+Edit
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</RelativeLayout>
+📄 Step 2: MainActivity.java
+java
+Copy
+Edit
+package com.example.webviewrestaurantapp;
+
+import android.os.Bundle;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    WebView webView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        webView = findViewById(R.id.webView);
+
+        webView.setWebViewClient(new WebViewClient()); // To open links in app, not browser
+
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true); // Enable JS if needed
+
+        webView.loadUrl("https://www.zomato.com"); // or "https://www.amazon.in"
+    }
+}
+📄 Step 3: AndroidManifest.xml
+Add this permission above <application> tag:
+
+xml
+Copy
+Edit
+<uses-permission android:name="android.permission.INTERNET" />
+Make sure your app also allows cleartext traffic (for non-https URLs, if needed):
+
+xml
+Copy
+Edit
+<application
+    android:usesCleartextTraffic="true"
+    ...>

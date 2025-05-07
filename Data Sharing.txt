@@ -1,0 +1,178 @@
+Data Sharing
+
+activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+
+
+MainActivity.java
+package com.herambpatil.pr1;
+//package com.example.billpaymentfragmentsapp;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        if (savedInstanceState == null) {
+            // Load ExamDetailsFragment initially
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new ExamDetailsFragment())
+                    .commit();
+        }
+    }
+}
+
+
+ExamInfoFragment.java
+package com.herambpatil.pr1;
+import androidx.fragment.app.Fragment;
+
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.view.View;
+import android.os.Bundle;
+import android.widget.TextView;
+
+import androidx.fragment.app.FragmentTransaction;
+
+
+public class ExamInfoFragment extends Fragment {
+
+    TextView tvStudentName, tvSubject;
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_exam_info, container, false);
+
+        tvStudentName = view.findViewById(R.id.tvStudentName);
+        tvSubject = view.findViewById(R.id.tvSubject);
+
+        // Retrieve data passed from ExamDetailsFragment
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            String studentName = bundle.getString("studentName");
+            String subject = bundle.getString("subject");
+
+            tvStudentName.setText("Student Name: " + studentName);
+            tvSubject.setText("Subject: " + subject);
+        }
+
+        return view;
+    }
+}
+
+
+fragment_exam_info.xml
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tvStudentName"
+        android:text="Student Name: "
+        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tvSubject"
+        android:text="Subject: "
+        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
+
+
+ExamDetailsFragment.java
+package com.herambpatil.pr1;
+import androidx.fragment.app.Fragment;
+
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.view.View;
+import android.os.Bundle;
+import androidx.fragment.app.FragmentTransaction;
+//import setarguments
+import com.herambpatil.pr1.R;
+
+public class ExamDetailsFragment extends Fragment {
+
+    EditText etStudentName, etSubject;
+    Button btnSubmit;
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_exam_details, container, false);
+
+        etStudentName = view.findViewById(R.id.etStudentName);
+        etSubject = view.findViewById(R.id.etSubject);
+        btnSubmit = view.findViewById(R.id.btnSubmit);
+
+        btnSubmit.setOnClickListener(v -> {
+            String studentName = etStudentName.getText().toString();
+            String subject = etSubject.getText().toString();
+
+            // Create a Bundle to share data
+            Bundle bundle = new Bundle();
+            bundle.putString("studentName", studentName);
+            bundle.putString("subject", subject);
+
+            // Create a new fragment instance and set the bundle as arguments
+            ExamInfoFragment examInfoFragment = new ExamInfoFragment();
+            examInfoFragment.setArguments(bundle);
+
+            // Switch to ExamInfoFragment
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, examInfoFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        });
+
+        return view;
+    }
+}
+
+
+fragment_exam_details.xml
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/etStudentName"
+        android:hint="Enter Student Name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/etSubject"
+        android:hint="Enter Subject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnSubmit"
+        android:text="Submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

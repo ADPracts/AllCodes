@@ -1,0 +1,94 @@
+Dialog Box and Menu for a University App
+🎯 You'll learn:
+
+How to add an Options Menu
+
+How to show an Alert Dialog when an item is selected
+
+✅ Project: UniversityDialogMenuApp
+📄 Step 1: activity_main.xml
+xml
+Copy
+Edit
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tvWelcome"
+        android:text="Welcome to University App"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>
+📄 Step 2: MainActivity.java
+java
+Copy
+Edit
+package com.example.universitydialogmenuapp;
+
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add("About University");
+        menu.add("Courses Offered");
+        menu.add("Exit");
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        String title = item.getTitle().toString();
+
+        switch (title) {
+            case "About University":
+                showDialog("Our university offers world-class education in engineering, arts, and science.");
+                break;
+
+            case "Courses Offered":
+                showDialog("Available courses: B.Tech, M.Tech, B.Sc, M.Sc, MBA.");
+                break;
+
+            case "Exit":
+                confirmExit();
+                break;
+        }
+        return true;
+    }
+
+    private void showDialog(String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Information")
+               .setMessage(message)
+               .setPositiveButton("OK", null)
+               .show();
+    }
+
+    private void confirmExit() {
+        new AlertDialog.Builder(this)
+            .setTitle("Exit")
+            .setMessage("Are you sure you want to exit?")
+            .setPositiveButton("Yes", (dialog, which) -> finish())
+            .setNegativeButton("No", null)
+            .show();
+    }
+}
